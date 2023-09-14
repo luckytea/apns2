@@ -18,9 +18,9 @@ import (
 
 	"golang.org/x/net/http2"
 
-	apns "github.com/sideshow/apns2"
-	"github.com/sideshow/apns2/certificate"
-	"github.com/sideshow/apns2/token"
+	apns "github.com/luckytea/apns2"
+	"github.com/luckytea/apns2/certificate"
+	"github.com/luckytea/apns2/token"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -180,7 +180,7 @@ func TestDefaultHeaders(t *testing.T) {
 func TestClientPushWithContextWithTimeout(t *testing.T) {
 	const timeout = time.Nanosecond
 	n := mockNotification()
-	var apnsID = "02ABC856-EF8D-4E49-8F15-7B8A61D978D6"
+	apnsID := "02ABC856-EF8D-4E49-8F15-7B8A61D978D6"
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("apns-id", apnsID)
@@ -198,7 +198,7 @@ func TestClientPushWithContextWithTimeout(t *testing.T) {
 
 func TestClientPushWithContext(t *testing.T) {
 	n := mockNotification()
-	var apnsID = "02ABC856-EF8D-4E49-8F15-7B8A61D978D6"
+	apnsID := "02ABC856-EF8D-4E49-8F15-7B8A61D978D6"
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("apns-id", apnsID)
@@ -213,7 +213,7 @@ func TestClientPushWithContext(t *testing.T) {
 
 func TestClientPushWithNilContext(t *testing.T) {
 	n := mockNotification()
-	var apnsID = "02ABC856-EF8D-4E49-8F15-7B8A61D978D6"
+	apnsID := "02ABC856-EF8D-4E49-8F15-7B8A61D978D6"
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("apns-id", apnsID)
@@ -358,7 +358,7 @@ func TestBadPayload(t *testing.T) {
 
 func Test200SuccessResponse(t *testing.T) {
 	n := mockNotification()
-	var apnsID = "02ABC856-EF8D-4E49-8F15-7B8A61D978D6"
+	apnsID := "02ABC856-EF8D-4E49-8F15-7B8A61D978D6"
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("apns-id", apnsID)
@@ -374,7 +374,7 @@ func Test200SuccessResponse(t *testing.T) {
 
 func Test400BadRequestPayloadEmptyResponse(t *testing.T) {
 	n := mockNotification()
-	var apnsID = "02ABC856-EF8D-4E49-8F15-7B8A61D978D6"
+	apnsID := "02ABC856-EF8D-4E49-8F15-7B8A61D978D6"
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("apns-id", apnsID)
@@ -392,7 +392,7 @@ func Test400BadRequestPayloadEmptyResponse(t *testing.T) {
 
 func Test410UnregisteredResponse(t *testing.T) {
 	n := mockNotification()
-	var apnsID = "9F595474-356C-485E-B67F-9870BAE68702"
+	apnsID := "9F595474-356C-485E-B67F-9870BAE68702"
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Header().Set("apns-id", apnsID)

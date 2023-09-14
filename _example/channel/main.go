@@ -1,15 +1,14 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
 
-	"flag"
-
-	"github.com/sideshow/apns2"
-	"github.com/sideshow/apns2/certificate"
-	"github.com/sideshow/apns2/payload"
+	"github.com/luckytea/apns2"
+	"github.com/luckytea/apns2/certificate"
+	"github.com/luckytea/apns2/payload"
 )
 
 func main() {

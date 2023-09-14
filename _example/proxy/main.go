@@ -10,8 +10,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/sideshow/apns2"
-	"github.com/sideshow/apns2/certificate"
+	"github.com/luckytea/apns2"
+	"github.com/luckytea/apns2/certificate"
 	"golang.org/x/net/http2"
 )
 
@@ -73,7 +73,6 @@ func main() {
 	`)
 
 	res, err := client.Push(notification)
-
 	if err != nil {
 		log.Fatal("Error:", err)
 	}

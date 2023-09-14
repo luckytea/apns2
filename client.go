@@ -14,7 +14,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/sideshow/apns2/token"
+	"github.com/luckytea/apns2/token"
 	"golang.org/x/net/http2"
 )
 
@@ -234,5 +234,4 @@ func setHeaders(r *http.Request, n *Notification) {
 	} else {
 		r.Header.Set("apns-push-type", string(PushTypeAlert))
 	}
-
 }

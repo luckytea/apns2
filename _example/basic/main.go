@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/sideshow/apns2"
-	"github.com/sideshow/apns2/certificate"
+	"github.com/luckytea/apns2"
+	"github.com/luckytea/apns2/certificate"
 )
 
 func main() {
@@ -38,7 +38,6 @@ func main() {
 
 	client := apns2.NewClient(cert).Production()
 	res, err := client.Push(notification)
-
 	if err != nil {
 		log.Fatal("Error:", err)
 	}

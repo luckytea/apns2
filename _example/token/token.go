@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/sideshow/apns2"
-	"github.com/sideshow/apns2/token"
+	"github.com/luckytea/apns2"
+	"github.com/luckytea/apns2/token"
 )
 
 func main() {
@@ -46,7 +46,6 @@ func main() {
 
 	client := apns2.NewTokenClient(token).Production()
 	res, err := client.Push(notification)
-
 	if err != nil {
 		log.Fatal("Error:", err)
 	}
