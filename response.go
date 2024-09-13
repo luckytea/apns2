@@ -10,9 +10,9 @@ import (
 const StatusSent = http.StatusOK
 
 // The possible Reason error codes returned from APNs. From table 4 in the
-// Handling Notification Responses from APNs article
+// Handling Notification Responses from APNs article.
 const (
-	// 400 The collapse identifier exceeds the maximum allowed size
+	// 400 The collapse identifier exceeds the maximum allowed size.
 	ReasonBadCollapseID = "BadCollapseId"
 
 	// 400 The specified device token was bad. Verify that the request contains a
@@ -112,7 +112,6 @@ const (
 // notification was accepted or rejected and (if applicable) the metadata
 // surrounding the rejection.
 type Response struct {
-
 	// The HTTP status code returned by APNs.
 	// A 200 value indicates that the notification was successfully sent.
 	// For a list of other possible status codes, see table 6-4 in the Apple Local
@@ -140,7 +139,7 @@ func (c *Response) Sent() bool {
 	return c.StatusCode == StatusSent
 }
 
-// Time represents a device uninstall time
+// Time represents a device uninstall time.
 type Time struct {
 	time.Time
 }

@@ -16,12 +16,11 @@ import (
 	"testing"
 	"time"
 
-	"golang.org/x/net/http2"
-
 	apns "github.com/luckytea/apns2"
 	"github.com/luckytea/apns2/certificate"
 	"github.com/luckytea/apns2/token"
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/net/http2"
 )
 
 // Mocks

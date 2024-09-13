@@ -4,7 +4,7 @@ package payload
 
 import "encoding/json"
 
-// InterruptionLevel defines the value for the payload aps interruption-level
+// InterruptionLevel defines the value for the payload aps interruption-level.
 type EInterruptionLevel string
 
 const (
@@ -24,7 +24,7 @@ const (
 )
 
 // Payload represents a notification which holds the content that will be
-// marshalled as JSON.
+// marshaled as JSON.
 type Payload struct {
 	content map[string]interface{}
 }
@@ -63,7 +63,7 @@ type sound struct {
 	Volume   float32 `json:"volume,omitempty"`
 }
 
-// NewPayload returns a new Payload struct
+// NewPayload returns a new Payload struct.
 func NewPayload() *Payload {
 	return &Payload{
 		map[string]interface{}{
@@ -218,7 +218,7 @@ func (p *Payload) AlertLaunchImage(image string) *Payload {
 // specifiers in loc-key. See Localized Formatted Strings in Apple
 // documentation for more information.
 //
-//  {"aps":{"alert":{"loc-args":args}}}
+//	{"aps":{"alert":{"loc-args":args}}}
 func (p *Payload) AlertLocArgs(args []string) *Payload {
 	p.aps().alert().LocArgs = args
 	return p
@@ -329,7 +329,7 @@ func (p *Payload) URLArgs(urlArgs []string) *Payload {
 // This function makes the notification a critical alert, which should be pre-approved by Apple.
 // See: https://developer.apple.com/contact/request/notifications-critical-alerts-entitlement/
 //
-// {"aps":{"sound":{"critical":1,"name":name,"volume":1.0}}}
+// {"aps":{"sound":{"critical":1,"name":name,"volume":1.0}}}.
 func (p *Payload) SoundName(name string) *Payload {
 	p.aps().sound().Name = name
 	return p
@@ -339,7 +339,7 @@ func (p *Payload) SoundName(name string) *Payload {
 // This function makes the notification a critical alert, which should be pre-approved by Apple.
 // See: https://developer.apple.com/contact/request/notifications-critical-alerts-entitlement/
 //
-// {"aps":{"sound":{"critical":1,"name":"default","volume":volume}}}
+// {"aps":{"sound":{"critical":1,"name":"default","volume":volume}}}.
 func (p *Payload) SoundVolume(volume float32) *Payload {
 	p.aps().sound().Volume = volume
 	return p
@@ -350,7 +350,7 @@ func (p *Payload) SoundVolume(volume float32) *Payload {
 // (Using InterruptionLevelCritical requires an approved entitlement from Apple.)
 // See: https://developer.apple.com/documentation/usernotifications/unnotificationinterruptionlevel/
 //
-// {"aps":{"interruption-level":passive}}
+// {"aps":{"interruption-level":passive}}.
 func (p *Payload) InterruptionLevel(interruptionLevel EInterruptionLevel) *Payload {
 	p.aps().InterruptionLevel = interruptionLevel
 	return p
@@ -378,7 +378,7 @@ func (p *Payload) UnsetRelevanceScore() *Payload {
 	return p
 }
 
-// MarshalJSON returns the JSON encoded version of the Payload
+// MarshalJSON returns the JSON encoded version of the Payload.
 func (p *Payload) MarshalJSON() ([]byte, error) {
 	return json.Marshal(p.content)
 }

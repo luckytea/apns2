@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"testing"
 
-	. "github.com/luckytea/apns2/payload"
 	"github.com/stretchr/testify/assert"
+
+	. "github.com/luckytea/apns2/payload"
 )
 
 func TestEmptyPayload(t *testing.T) {

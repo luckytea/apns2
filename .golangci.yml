@@ -1,70 +1,114 @@
-# upd 23.09.14-00:00
+# upd 24.09.02-11:35
 # Refer to golangci-lint's example config file for more options and information:
 # https://github.com/golangci/golangci-lint/blob/master/.golangci.example.yml
 
 # Options for analysis running.
 run:
-  # The default concurrency value is the number of available CPU.
+  # Number of operating system threads (`GOMAXPROCS`) that can execute golangci-lint simultaneously.
+  # If it is explicitly set to 0 (i.e. not the default) then golangci-lint will automatically set the value to match Linux container CPU quota.
+  # Default: the number of logical CPUs in the machine
   concurrency: 4
+
   # Timeout for analysis,
   timeout: 5m
-  modules-download-mode: vendor
+
+  # Exit code when at least one issue was found.
+  # Default: 1
+  issues-exit-code: 1
+  
+  # If set, we pass it to "go list -mod={option}". From "go help modules":
+  # If invoked with -mod=readonly, the go command is disallowed from the implicit
+  # automatic updating of go.mod described above. Instead, it fails when any changes
+  # to go.mod are needed. This setting is most useful to check that go.mod does
+  # not need updates, such as in a continuous integration and testing system.
+  # If invoked with -mod=vendor, the go command assumes that the vendor
+  # directory holds the correct copies of dependencies and ignores
+  # the dependency descriptions in go.mod.
+  #
+  # Allowed values: readonly|vendor|mod
+  # Default: ""
+  modules-download-mode: readonly
+
+  # Allow multiple parallel golangci-lint instances running.
+  # If false, golangci-lint acquires file lock on start.
+  # Default: false
+  allow-parallel-runners: true
 
 # output configuration options
 output:
-  # Format: colored-line-number|line-number|json|tab|checkstyle|code-climate|junit-xml|github-actions
-  #
-  # Multiple can be specified by separating them by comma, output can be provided
-  # for each of them by separating format name and path by colon symbol.
+  # The formats used to render issues.
+  # Formats:
+  # - `colored-line-number`
+  # - `line-number`
+  # - `json`
+  # - `colored-tab`
+  # - `tab`
+  # - `html`
+  # - `checkstyle`
+  # - `code-climate`
+  # - `junit-xml`
+  # - `github-actions`
+  # - `teamcity`
+  # - `sarif`
   # Output path can be either `stdout`, `stderr` or path to the file to write to.
-  # Example: "checkstyle:report.json,colored-line-number"
   #
-  # Default: colored-line-number
-  format: tab
+  # For the CLI flag (`--out-format`), multiple formats can be specified by separating them by comma.
+  # The output can be specified for each of them by separating format name and path by colon symbol.
+  # Example: "--out-format=checkstyle:report.xml,json:stdout,colored-line-number"
+  # The CLI flag (`--out-format`) override the configuration file.
+  #
+  # Default:
+  #   formats:
+  #     - format: colored-line-number
+  #       path: stdout
+  formats:
+    - format: colored-line-number
 
-  # Print lines of code with issue.
-  # Default: true
-  print-issued-lines: true
-
-  # Print linter name in the end of issue text.
-  # Default: true
-  print-linter-name: true
-
-  # Make issues output unique by line.
-  # Default: true
-  uniq-by-line: false
-
-  # Sort results by: filepath, line and column.
+  # Sort results by the order defined in `sort-order`.
+  # Default: false
   sort-results: true
+
+  # Order to use when sorting results.
+  # Require `sort-results` to `true`.
+  # Possible values: `file`, `linter`, and `severity`.
+  #
+  # If the severity values are inside the following list, they are ordered in this order:
+  #   1. error
+  #   2. warning
+  #   3. high
+  #   4. medium
+  #   5. low
+  # Either they are sorted alphabetically.
+  #
+  # Default: ["file"]
+  sort-order:
+    - linter
+    - severity
+    - file # filepath, line, and column.
 
 linters:
   enable-all: true
   disable:
+    - gomnd # deprecated.
+    - exportloopref # deprecated.
     - contextcheck # false positives.
-    - deadcode # is deprecated (since v1.49.0).
     - depguard # doesn't need.
     - dupword # false positives.
-    - exhaustivestruct # is deprecated (since v1.46.0).
+    - execinquery # false positives.
     - exhaustruct  # false positives.
     - gochecknoglobals # false positives.
-    - golint # is deprecated (since v1.41.0)
-    - ifshort # is deprecated (since v1.48.0).
-    - interfacer # is deprecated (since v1.38.0).
-    - maligned # is deprecated (since v1.38.0).
     - musttag # broken.
     - nlreturn # doesn't need.
     - nolintlint # doesn't need.
     - nonamedreturns # false positives in short functions.
-    - nosnakecase # is deprecated (since v1.48.1).
     - paralleltest # doesn't need.
-    - scopelint # is deprecated (since v1.39.0).
-    - structcheck # is deprecated (since v1.49.0).
     - tagalign # false positives.
     - tparallel # doesn't need.
     - wrapcheck # doesn't need.
     - wsl # doesn't need.
-    - varcheck # is deprecated (since v1.49.0).
     - varnamelen # doesn't need.
+    - canonicalheader # doesn't need.
+    - perfsprint # false positives.
 
 # custom linter settings.
 linters-settings:
@@ -141,7 +185,6 @@ linters-settings:
   godot:
     # check all top-level comments, not only declarations
     check-all: false
-    auto-fix: true
   godox:
     # report any comments starting with keywords, this is useful for TODO or FIXME comments that
     # might be left in the code accidentally and should be resolved before merging
@@ -176,8 +219,6 @@ linters-settings:
   nolintlint:
     # Enable to ensure that nolint directives are all used. Default is true.
     allow-unused: false
-    # Disable to ensure that nolint directives don't have a leading space. Default is true.
-    allow-leading-space: true
     # Exclude following linters from requiring an explanation.  Default is [].
     allow-no-explanation: []
     # Enable to require an explanation of nonzero length after each nolint directive. Default is false.
@@ -274,6 +315,9 @@ linters-settings:
         json: snake
         yaml: camel
         xml: camel
+  testifylint:
+    disable:
+      - go-require
 
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
@@ -290,30 +334,28 @@ issues:
     # [stylecheck] Annoying issue about not having a comment. The rare codebase has such comments.
     - "ST1000: at least one file in a package should have a package comment"
   exclude-use-default: false
+  # Setting to unlimited so the linter only is run once to debug all issues.
   max-issues-per-linter: 0
+  # Setting to unlimited so the linter only is run once to debug all issues.
   max-same-issues: 0
   exclude-rules:
     # ignore long setups in test cases
     - path: _test.go
       linters:
         - funlen
-
     # ignore long lines for skip autogen directives
     - linters:
         - revive
       text: "^line-length-limit: "
       source: "^//(go:generate|sys) "
-
     # allow unjustified ignores of error checks in defer statements
     - linters:
         - nolintlint
       text: "^directive `//nolint:errcheck` should provide explanation"
       source: '^\s*defer '
-
     # ignore random in test cases
     - path: _test.go
       text: "^G404:"
-
     # ignore path to fixtures in test file
     - path: _test.go
       text: "^G304:"

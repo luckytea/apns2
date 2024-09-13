@@ -18,13 +18,13 @@ import (
 	"golang.org/x/net/http2"
 )
 
-// Apple HTTP/2 Development & Production urls
+// Apple HTTP/2 Development & Production urls.
 const (
 	HostDevelopment = "https://api.sandbox.push.apple.com"
 	HostProduction  = "https://api.push.apple.com"
 )
 
-// DefaultHost is a mutable var for testing purposes
+// DefaultHost is a mutable var for testing purposes.
 var DefaultHost = HostDevelopment
 
 var (
@@ -40,7 +40,7 @@ var (
 
 	// TCPKeepAlive specifies the keep-alive period for an active network
 	// connection. If zero, keep-alive probes are sent with a default value
-	// (currently 15 seconds)
+	// (currently 15 seconds).
 	TCPKeepAlive = 15 * time.Second
 
 	// TLSDialTimeout is the maximum amount of time a dial will wait for a connect
@@ -58,7 +58,7 @@ var DialTLS = func(network, addr string, cfg *tls.Config) (net.Conn, error) {
 	return tls.DialWithDialer(dialer, network, addr, cfg)
 }
 
-// Client represents a connection with the APNs
+// Client represents a connection with the APNs.
 type Client struct {
 	Host        string
 	Certificate tls.Certificate
