@@ -3,31 +3,32 @@ package certificate_test
 import (
 	"crypto/tls"
 	"errors"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/luckytea/apns2/certificate"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // PKCS#12
 
 func TestValidCertificateFromP12File(t *testing.T) {
 	cer, err := certificate.FromP12File("_fixtures/certificate-valid.p12", "")
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.NotEqual(t, tls.Certificate{}, cer)
 }
 
 func TestValidCertificateFromP12Bytes(t *testing.T) {
-	bytes, _ := ioutil.ReadFile("_fixtures/certificate-valid.p12")
+	bytes, _ := os.ReadFile("_fixtures/certificate-valid.p12")
 	cer, err := certificate.FromP12Bytes(bytes, "")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotEqual(t, tls.Certificate{}, cer)
 }
 
 func TestEncryptedValidCertificateFromP12File(t *testing.T) {
 	cer, err := certificate.FromP12File("_fixtures/certificate-valid-encrypted.p12", "password")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotEqual(t, tls.Certificate{}, cer)
 }
 
@@ -47,33 +48,33 @@ func TestBadPasswordP12File(t *testing.T) {
 
 func TestValidCertificateFromPemFile(t *testing.T) {
 	cer, err := certificate.FromPemFile("_fixtures/certificate-valid.pem", "")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotEqual(t, tls.Certificate{}, cer)
 }
 
 func TestValidCertificateFromPemBytes(t *testing.T) {
-	bytes, _ := ioutil.ReadFile("_fixtures/certificate-valid.pem")
+	bytes, _ := os.ReadFile("_fixtures/certificate-valid.pem")
 	cer, err := certificate.FromPemBytes(bytes, "")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotEqual(t, tls.Certificate{}, cer)
 }
 
 func TestValidCertificateFromPemFileWithPKCS8PrivateKey(t *testing.T) {
 	cer, err := certificate.FromPemFile("_fixtures/certificate-valid-pkcs8.pem", "")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotEqual(t, tls.Certificate{}, cer)
 }
 
 func TestValidCertificateFromPemBytesWithPKCS8PrivateKey(t *testing.T) {
-	bytes, _ := ioutil.ReadFile("_fixtures/certificate-valid-pkcs8.pem")
+	bytes, _ := os.ReadFile("_fixtures/certificate-valid-pkcs8.pem")
 	cer, err := certificate.FromPemBytes(bytes, "")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotEqual(t, tls.Certificate{}, cer)
 }
 
 func TestEncryptedValidCertificateFromPemFile(t *testing.T) {
 	cer, err := certificate.FromPemFile("_fixtures/certificate-valid-encrypted.pem", "password")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotEqual(t, tls.Certificate{}, cer)
 }
 

@@ -13,8 +13,8 @@ import (
 
 func TestResponseSent(t *testing.T) {
 	assert.Equal(t, http.StatusOK, apns.StatusSent)
-	assert.Equal(t, true, (&apns.Response{StatusCode: 200}).Sent())
-	assert.Equal(t, false, (&apns.Response{StatusCode: 400}).Sent())
+	assert.True(t, (&apns.Response{StatusCode: 200}).Sent())
+	assert.False(t, (&apns.Response{StatusCode: 400}).Sent())
 }
 
 func TestIntTimestampParse(t *testing.T) {

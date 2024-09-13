@@ -15,8 +15,8 @@ import (
 
 func TestNewClientManager(t *testing.T) {
 	manager := apns2.NewClientManager()
-	assert.Equal(t, manager.MaxSize, 64)
-	assert.Equal(t, manager.MaxAge, 10*time.Minute)
+	assert.Equal(t, 64, manager.MaxSize)
+	assert.Equal(t, 10*time.Minute, manager.MaxAge)
 }
 
 func TestClientManagerGetWithoutNew(t *testing.T) {

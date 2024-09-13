@@ -4,7 +4,7 @@ package payload
 
 import "encoding/json"
 
-// InterruptionLevel defines the value for the payload aps interruption-level.
+// EInterruptionLevel defines the value for the payload aps interruption-level.
 type EInterruptionLevel string
 
 const (
@@ -356,7 +356,7 @@ func (p *Payload) InterruptionLevel(interruptionLevel EInterruptionLevel) *Paylo
 	return p
 }
 
-// The relevance score, a number between 0 and 1,
+// RelevanceScore - The relevance score, a number between 0 and 1,
 // that the system uses to sort the notifications from your app.
 // The highest score gets featured in the notification summary.
 // See https://developer.apple.com/documentation/usernotifications/unnotificationcontent/3821031-relevancescore.
@@ -367,7 +367,7 @@ func (p *Payload) RelevanceScore(b float32) *Payload {
 	return p
 }
 
-// Unsets the relevance score
+// UnsetRelevanceScore - Unsets the relevance score
 // that the system uses to sort the notifications from your app.
 // The highest score gets featured in the notification summary.
 // See https://developer.apple.com/documentation/usernotifications/unnotificationcontent/3821031-relevancescore.

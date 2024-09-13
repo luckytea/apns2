@@ -8,7 +8,7 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"net/http/httptest"
@@ -20,6 +20,7 @@ import (
 	"github.com/luckytea/apns2/certificate"
 	"github.com/luckytea/apns2/token"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"golang.org/x/net/http2"
 )
 
@@ -90,7 +91,7 @@ func TestTokenClientProductionHost(t *testing.T) {
 func TestClientBadUrlError(t *testing.T) {
 	n := mockNotification()
 	res, err := mockClient("badurl://badurl.com").Push(n)
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.Nil(t, res)
 }
 
@@ -99,7 +100,7 @@ func TestClientBadTransportError(t *testing.T) {
 	client := mockClient("badurl://badurl.com")
 	client.HTTPClient.Transport = nil
 	res, err := client.Push(n)
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.Nil(t, res)
 }
 
@@ -108,7 +109,7 @@ func TestClientBadDeviceToken(t *testing.T) {
 	n.DeviceToken = "DGw\aOoD+HwSroh#Ug]%xzd]"
 	n.Payload = []byte(`{"aps":{"alert":"Hello!"}}`)
 	res, err := mockClient("https://api.push.apple.com").Push(n)
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.Nil(t, res)
 }
 
@@ -121,7 +122,7 @@ func TestClientNameToCertificate(t *testing.T) {
 	certificate2 := tls.Certificate{}
 	client2 := apns.NewClient(certificate2)
 	name2 := client2.HTTPClient.Transport.(*http2.Transport).TLSClientConfig.NameToCertificate
-	assert.Len(t, name2, 0)
+	assert.Empty(t, name2)
 }
 
 func TestDialTLSTimeout(t *testing.T) {
@@ -190,7 +191,7 @@ func TestClientPushWithContextWithTimeout(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	time.Sleep(timeout)
 	res, err := mockClient(server.URL).PushWithContext(ctx, n)
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.Nil(t, res)
 	cancel()
 }
@@ -206,7 +207,7 @@ func TestClientPushWithContext(t *testing.T) {
 	defer server.Close()
 
 	res, err := mockClient(server.URL).PushWithContext(context.Background(), n)
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, res.ApnsID, apnsID)
 }
 
@@ -221,7 +222,7 @@ func TestClientPushWithNilContext(t *testing.T) {
 	defer server.Close()
 
 	res, err := mockClient(server.URL).PushWithContext(nil, n)
-	assert.EqualError(t, err, "net/http: nil Context")
+	require.EqualError(t, err, "net/http: nil Context")
 	assert.Nil(t, res)
 }
 
@@ -339,7 +340,7 @@ func TestAuthorizationHeader(t *testing.T) {
 func TestPayload(t *testing.T) {
 	n := mockNotification()
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		body, err := ioutil.ReadAll(r.Body)
+		body, err := io.ReadAll(r.Body)
 		assert.NoError(t, err)
 		assert.Equal(t, n.Payload, body)
 	}))
@@ -365,10 +366,10 @@ func Test200SuccessResponse(t *testing.T) {
 	}))
 	defer server.Close()
 	res, err := mockClient(server.URL).Push(n)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, http.StatusOK, res.StatusCode)
 	assert.Equal(t, apnsID, res.ApnsID)
-	assert.Equal(t, true, res.Sent())
+	assert.True(t, res.Sent())
 }
 
 func Test400BadRequestPayloadEmptyResponse(t *testing.T) {
@@ -382,11 +383,11 @@ func Test400BadRequestPayloadEmptyResponse(t *testing.T) {
 	}))
 	defer server.Close()
 	res, err := mockClient(server.URL).Push(n)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, 400, res.StatusCode)
 	assert.Equal(t, apnsID, res.ApnsID)
 	assert.Equal(t, apns.ReasonPayloadEmpty, res.Reason)
-	assert.Equal(t, false, res.Sent())
+	assert.False(t, res.Sent())
 }
 
 func Test410UnregisteredResponse(t *testing.T) {
@@ -400,12 +401,12 @@ func Test410UnregisteredResponse(t *testing.T) {
 	}))
 	defer server.Close()
 	res, err := mockClient(server.URL).Push(n)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, 410, res.StatusCode)
 	assert.Equal(t, apnsID, res.ApnsID)
 	assert.Equal(t, apns.ReasonUnregistered, res.Reason)
 	assert.Equal(t, int64(1458114061260)/1000, res.Timestamp.Unix())
-	assert.Equal(t, false, res.Sent())
+	assert.False(t, res.Sent())
 }
 
 func TestMalformedJSONResponse(t *testing.T) {
@@ -416,8 +417,8 @@ func TestMalformedJSONResponse(t *testing.T) {
 	}))
 	defer server.Close()
 	res, err := mockClient(server.URL).Push(n)
-	assert.Error(t, err)
-	assert.Equal(t, false, res.Sent())
+	require.Error(t, err)
+	assert.False(t, res.Sent())
 }
 
 func TestCloseIdleConnections(t *testing.T) {
@@ -426,7 +427,7 @@ func TestCloseIdleConnections(t *testing.T) {
 	client := mockClient("")
 	client.HTTPClient.Transport = transport
 
-	assert.Equal(t, false, transport.closed)
+	assert.False(t, transport.closed)
 	client.CloseIdleConnections()
-	assert.Equal(t, true, transport.closed)
+	assert.True(t, transport.closed)
 }
